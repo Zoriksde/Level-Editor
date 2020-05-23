@@ -1,0 +1,11 @@
+.modal .button-small {
+    width: 210px !important;
+}
+
+.modal .button-large {
+    min-width: 440px !important;
+}
+
+.modal .LevelsTable {
+    text-align: center;
+}

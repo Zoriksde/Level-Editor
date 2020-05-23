@@ -1,0 +1,29 @@
+#EditorMenu {
+    background-color: #343a40;
+    padding-top: 20px;
+    height: 92vh;
+}
+
+button.btn, select {
+    width: 80%;
+    text-align: center;
+    font-size: 1.1em;
+    margin-top: 15px;
+}
+
+#LevelCanvas {
+    margin-top: 15px;
+    margin-left: 15px;
+}
+
+#JsonInfo {
+    background-color: #343a40;
+    height: 92vh;
+    overflow: hidden;
+}
+
+#OptionsView {
+    background-color: #343a40;
+    padding-top: 20px;
+    height: 92vh;
+}

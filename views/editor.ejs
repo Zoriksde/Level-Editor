@@ -1,0 +1,118 @@
+<%- include('includes/head.ejs') %>
+
+<link rel="stylesheet" href="/css/LevelEditor/editor.css">
+<link rel="stylesheet" href="/css/LevelEditor/modal.css">
+<link rel="stylesheet" href="/css/LevelEditor/hexagon.css">
+
+<script src="/js/LevelEditor/Hexagon.js"></script>
+<script src="/js/LevelEditor/_Connection.js"></script>
+<script src="/js/LevelEditor/Main.js"></script>
+
+</head>
+
+<body>
+    <%- include('includes/header.ejs') %>
+
+    <div class="row d-flex flex-row">
+
+        <div class="col-md-2" id="EditorMenu">
+
+            <select id="QuantitySelect" class="browser-default custom-select"></select>
+            <button id="SaveButtonModal" class="btn btn-success" data-toggle="modal" data-target="#SaveLevel">Save on
+                Server</button>
+            <button id="LoadButtonModal" class="btn btn-success" data-toggle="modal" data-target="#LoadLevel">Load from
+                Server</button>
+            <button id="WallType" type="Wall" class="btn btn-primary">Wall</button>
+            <button id="EnemyType" type="Enemy" class="btn btn-secondary">Enemy</button>
+            <button id="TreasureType" type="Treasure" class="btn btn-secondary">Treasure</button>
+            <button id="LightType" type="Light" class="btn btn-secondary">Light</button>
+            <button id="GameButton" class="btn btn-success" onclick="window.location.href='/PlayGame'">Play
+                game</button>
+
+        </div>
+
+        <div class="col-md-5" id="LevelCanvas">
+
+        </div>
+
+        <div class="col-md-3" id="JsonInfo" style="padding-top: 0px;">
+            <div class="form-group">
+                <textarea class="form-control rounded-0" id="LevelDataInfo" rows="26" disabled></textarea>
+            </div>
+        </div>
+
+        <div class="col-md" id="OptionsView" style="padding-top: 0px;">
+            <button class="btn" style="background-color: #255850; color: white; margin-top: 0px;">Wall
+                Background</button>
+            <button class="btn" style="background-color: #91aff6; color: white;">Enemy Background</button>
+            <button class="btn" style="background-color: #c27f15; color: white;">Treasure Background</button>
+            <button class="btn" style="background-color: #90457a; color: white;">Light Background</button>
+        </div>
+
+
+
+        <div class="modal fade" id="SaveLevel" tabindex="-1" role="dialog" aria-labelledby="#SaveCurrentLevel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-header" id="SaveCurrentLevel">Save Current Level</h5>
+                        <button class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p> Save Current Level </p>
+
+                        <div class="form-group">
+                            <input type="text" id="LevelName" class="form-control" placeholder="Level Name...">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="LevelAuthor" class="form-control" placeholder="Level Author...">
+                        </div>
+
+                        <button id="SaveButton" data-dismiss="modal" class="btn btn-success button-small">Save
+                            Level</button>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger button-small" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="LoadLevel" tabindex="-1" role="dialog" aria-labelledby="#LoadLevelData">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-header" id="LoadLevelData">Load Level</h5>
+                        <button class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p> Load from server.. </p>
+
+                        <table class="LevelsTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col"> # </th>
+                                    <th scope="col"> Name </th>
+                                    <th scope="col"> Author </th>
+                                    <th scope="col"> Load </th>
+                                </tr>
+                            </thead>
+                            <tbody id="LevelsInfo">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger button-small" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('includes/end.ejs') %>

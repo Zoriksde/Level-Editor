@@ -1,0 +1,37 @@
+.hexagon {   
+    position: absolute;
+    cursor: pointer;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.hexagon-inside {  
+    width: 100%;
+    height: 100%;
+    transform: rotate(-60deg);
+    overflow: hidden;
+}
+
+.hexagon-nested {
+    width: 100%;
+    height: 100%;
+    background-color: #255850;
+    transform: rotate(-60deg);
+    visibility: visible;
+    padding-top: 15px;
+}
+
+.hexagon-arrow {
+    text-align: center;
+    width: 40%;
+    height: 30%;
+    margin-left: 48px;
+    transform: rotateZ(-90deg);
+}
+
+.hexagon-dir {
+    color: #ffffff;
+    text-align: center;
+    font-size: 38px;
+    padding-top: 10px;
+}
