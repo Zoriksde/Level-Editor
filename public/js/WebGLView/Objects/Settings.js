@@ -78,6 +78,8 @@ const Settings = {
     }),
 
     ModelCameraOffset: {
-        xz: 20, y: 60
-    }
+        x: 20, y: 40, z: -25
+    },
+
+    ModelSizeZ: -1
 }

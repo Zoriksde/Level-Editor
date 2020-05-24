@@ -1,0 +1,33 @@
+<%- include('includes/head.ejs') %>
+
+<link rel="stylesheet" href="/css/WebGLView/root.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+
+<script src="/js/WebGLView/Objects/Settings.js"></script>
+<script src="/js/WebGLView/Objects/Point.js"></script>
+<script src="/js/WebGLView/Objects/Player.js"></script>
+<script src="/js/WebGLView/Objects/Plane.js"></script>
+<script src="/js/WebGLView/WebGLCreator.js"></script>
+<script src="/js/WebGLView/MainAlly.js"></script>
+
+</head>
+
+<body>
+    <%- include('includes/header.ejs') %>
+
+    <div class="row d-flex flex-row">
+
+        <div class="col-md-2" id="OptionsMenu">
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="PlayerPosition" value="Me: ( X: 0 Y: 0 Z: 0 )" disabled>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="ActualDistance" value="Distance: (0)" disabled>
+            </div>
+        </div>
+
+        <div class="col-md-10" id="MainWebGLRoot"></div>
+
+        <%- include('includes/end.ejs') %>

@@ -7,7 +7,7 @@ class Treasure extends Hexagon {
             outDoor: outDoor, containsLight: containsLight
         });
 
-        this.treasureSize = this.radius / 6;
+        this.treasureSize = this.radius / 8;
         this.InitTreasure();
     }
 
@@ -19,7 +19,7 @@ class Treasure extends Hexagon {
             Settings.PhongTreasureMaterial : Settings.BasicTreasureMaterial);
 
         this.treasure.lookAt(this.container.position);
-        this.treasure.position.y = 0 - this.treasureSize / 4;
+        this.treasure.position.y = 0 - this.treasureSize / 2;
 
         this.container.add(this.treasure);
     }

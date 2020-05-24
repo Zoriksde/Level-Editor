@@ -36,6 +36,13 @@ module.exports.SetMovementPage = (req, res, next) => {
     });
 }
 
+module.exports.SetAllyPage = (req, res, next) => {
+    res.render('ally', {
+        title: 'Ally Movement',
+        path: '/AllyMovement'
+    });
+}
+
 module.exports.SaveCurrentLevel = (req, res, next) => {
     const LevelName = req.body.name;
     const LevelAuthor = req.body.author;

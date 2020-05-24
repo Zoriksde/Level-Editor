@@ -2,16 +2,22 @@ const _Connection = new Connection({ connectionName: "ConnectionToServer" });
 const Types = ["Wall", "Enemy", "Treasure", "Light"];
 const Lights = [];
 const _Model = new Model({ modelName: "Model" });
+const _Clock = new THREE.Clock();
+
+let MovingObject = false;
+
+let ClickedVector = new THREE.Vector3(0, 0, 0);
+let DestinationVector = new THREE.Vector3(0, 0, 0);
 
 $(document).ready(() => {
-    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL", enableOrbitControles: false });
+    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL" });
     const _WebGLScene = _WebGLCreator.GetScene();
     const _WebGLCamera = _WebGLCreator.GetCamera();
     const _WebGLRenderer = _WebGLCreator.GetRenderer();
 
-    _WebGLCreator.Render();
-
     _Connection.GetLevelInfoData({ scene: _WebGLScene });
+
+    Render({ renderer: _WebGLRenderer, scene: _WebGLScene, camera: _WebGLCamera });
 
     InitializeLightIntensityRange();
     InitializeLightPositionRange();
@@ -97,9 +103,9 @@ const InitializeModel = ({ scene = null, camera = null } = {}) => {
     _Model.InitializeModel('/data/model.json', (model) => {
         scene.add(model);
 
-        camera.position.x = model.position.x + Settings.ModelCameraOffset.xz;
+        camera.position.x = model.position.x + Settings.ModelCameraOffset.x;
         camera.position.y = model.position.y + Settings.ModelCameraOffset.y;
-        camera.position.z = model.position.z + Settings.ModelCameraOffset.xz;
+        camera.position.z = model.position.z + Settings.ModelCameraOffset.z;
 
         camera.lookAt(model.position);
     });
@@ -114,9 +120,6 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
 
     $('#MainWebGLRoot').on('mousedown', (ev) => {
 
-        let ClickedVector = new THREE.Vector3(0, 0, 0);
-        let DestinationVector = new THREE.Vector3(0, 0, 0);
-
         MousePosition.x = (ev.offsetX / renderer.domElement.width) * 2 - 1;
         MousePosition.y = -(ev.offsetY / renderer.domElement.height) * 2 + 1;
 
@@ -126,7 +129,8 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
         if (Intersects.length > 0) {
 
             ClickedVector = Intersects[0].point;
-            
+            ClickedVector.y = _Model.GetModelContainer().scale.y;
+
             DestinationVector = ClickedVector.clone()
                 .sub(_Model.GetModelContainer().position).normalize();
 
@@ -135,13 +139,37 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
                 _Model.GetModelContainer().position.clone().z - ClickedVector.z
             );
 
-            _Model.GetModelContainer().rotation.y = ModelRotation;
+            _Model.GetModelObject().rotation.y = ModelRotation - Math.PI / 2;
+            _Model.SetModelAnimation({ animationName: "run" });
 
-            creator.SetMovingObject({
-                object: _Model.GetModelContainer(),
-                destinationVector: DestinationVector, clickedVector: ClickedVector,
-                optionsView: false, isModel: true
-            });
+            MovingObject = true;
         }
     })
+}
+
+const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
+    if (!renderer instanceof THREE.WebGLRenderer || !scene instanceof THREE.Scene
+        || !camera instanceof THREE.PerspectiveCamera) return;
+
+    if (MovingObject) {
+
+        const ModelContainer = _Model.GetModelContainer();
+        const ActualDistance = ModelContainer.position.clone().distanceTo(ClickedVector);
+        const ClockDelta = _Clock.getDelta();
+
+        _Model.UpdateModelMixer(ClockDelta);
+
+        if (ActualDistance < Settings.ModelSizeZ / 8) MovingObject = false;
+
+        ModelContainer.translateOnAxis(DestinationVector, 0.3);
+
+        camera.position.x = ModelContainer.position.x + Settings.ModelCameraOffset.x;
+        camera.position.y = ModelContainer.position.y + Settings.ModelCameraOffset.y;
+        camera.position.z = ModelContainer.position.z + Settings.ModelCameraOffset.z;
+
+        camera.lookAt(ModelContainer.position);
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));
 }

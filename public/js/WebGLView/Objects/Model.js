@@ -3,6 +3,7 @@ class Model {
 
         this.modelName = modelName;
         this.container = new THREE.Object3D();
+        this.mixer = null;
     }
 
     InitializeModel(url, callback) {
@@ -10,16 +11,35 @@ class Model {
         const Loader = new THREE.JSONLoader();
 
         Loader.load(url, (geometry) => {
-            const ModelMesh = new THREE.Mesh(geometry, Settings.BasicModelMaterial);
+            this.model = new THREE.Mesh(geometry, Settings.BasicModelMaterial);
 
-            ModelMesh.scale.set(0.35, 0.35, 0.35);
-            this.container.add(ModelMesh);
+            this.model.scale.set(0.25, 0.25, 0.25);
+
+            this.model.lookAt(this.container.position);
+            this.container.add(this.model);
+
+            const ModelBox = new THREE.Box3().setFromObject(this.container);
+            Settings.ModelSizeZ = ModelBox.getSize().z;
+
+            this.mixer = new THREE.AnimationMixer(this.model);
 
             callback(this.container);
         })
     }
 
+    UpdateModelMixer(delta) {
+        if (this.mixer) this.mixer.update(delta);
+    }
+
+    SetModelAnimation({ animationName = "" } = {}) {
+        this.mixer.clipAction(animationName).play();
+    }
+
     GetModelContainer() {
         return this.container;
+    }
+
+    GetModelObject() {
+        return this.model;
     }
 }

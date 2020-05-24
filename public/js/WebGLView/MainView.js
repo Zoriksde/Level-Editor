@@ -9,10 +9,12 @@ let _Hexagon = new Wall({ hexagonName: "Wall" }, {
 });
 
 $(document).ready(() => {
-    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL", enableOrbitControles: false });
-    const _WebGLScene = _WebGLCreator.GetScene();
+    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL" });
+    const _WebGLScene = _WebGLCreator.GetScene(); 
+    const _WebGLCamera = _WebGLCreator.GetCamera();
+    const _WebGLRenderer = _WebGLCreator.GetRenderer();
 
-    _WebGLCreator.Render();
+    Render({ renderer: _WebGLRenderer, scene: _WebGLScene, camera: _WebGLCamera });
     _WebGLScene.add(_Hexagon.GetHexagon());
 
     InitializeShowAxesButton({ scene: _WebGLScene });
@@ -130,4 +132,12 @@ const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
     }
 
     scene.add(_Hexagon.GetHexagon());
+}
+
+const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
+    if (!renderer instanceof THREE.WebGLRenderer || !scene instanceof THREE.Scene
+        || !camera instanceof THREE.PerspectiveCamera) return;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(Render.bind(null, {renderer: renderer, scene: scene, camera: camera}));
 }

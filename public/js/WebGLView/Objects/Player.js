@@ -29,4 +29,8 @@ class Player {
     GetPlayerObject() {
         return this.player;
     }
+
+    GetAxesObject() {
+        return this.axes;
+    }
 }
