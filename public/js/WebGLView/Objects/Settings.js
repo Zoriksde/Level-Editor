@@ -70,5 +70,14 @@ const Settings = {
         y: 300, z: 800
     },
 
-    PlayerSize: 80
+    PlayerSize: 80,
+
+    BasicModelMaterial: new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("/gfx/Materials/PlayerModel.png"),
+        morphTargets: true
+    }),
+
+    ModelCameraOffset: {
+        xz: 20, y: 60
+    }
 }

@@ -9,7 +9,7 @@ let _Hexagon = new Wall({ hexagonName: "Wall" }, {
 });
 
 $(document).ready(() => {
-    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL", enableOrbitControles: true });
+    const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL", enableOrbitControles: false });
     const _WebGLScene = _WebGLCreator.GetScene();
 
     _WebGLCreator.Render();

@@ -91,10 +91,10 @@ class Hexagon {
         this.hexagonMain.on('click', (ev) => {
             this.currentType = ActualType;
 
-            ChangeInDirection({ element: this });
-
             if (++this.outDirection >= MaxDirection)
                 this.outDirection = 0;
+
+            ChangeInDirection({ element: this });
 
             this.DrawArrowDirection();
             this.ChangeBackgroundByType();

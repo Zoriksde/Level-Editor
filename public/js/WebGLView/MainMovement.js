@@ -30,7 +30,7 @@ $(document).ready(() => {
     InitializeChangeSpeed({ creator: _WebGLCreator });
 })
 
-const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, creator = null }) => {
+const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, creator = null } = {}) => {
     if (!scene instanceof THREE.Scene || !camera instanceof THREE.PerspectiveCamera
         || !renderer instanceof THREE.WebGLRenderer || !creator instanceof WebGLCreator) return;
 
@@ -42,8 +42,8 @@ const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, c
         let ClickedVector = new THREE.Vector3(0, 0, 0);
         let DestinationVector = new THREE.Vector3(0, 0, 0);
 
-        MousePosition.x = (event.offsetX / renderer.domElement.width) * 2 - 1;
-        MousePosition.y = -(event.offsetY / renderer.domElement.height) * 2 + 1;
+        MousePosition.x = (ev.offsetX / renderer.domElement.width) * 2 - 1;
+        MousePosition.y = -(ev.offsetY / renderer.domElement.height) * 2 + 1;
 
         PlayerRaycaster.setFromCamera(MousePosition, camera);
         const Intersects = PlayerRaycaster.intersectObjects(scene.children);
@@ -65,9 +65,9 @@ const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, c
             SetActualPoint({ position: ClickedVector });
 
             creator.SetMovingObject({
-                object: _Player,
+                object: _Player.GetPlayerContainer(),
                 destinationVector: DestinationVector, clickedVector: ClickedVector,
-                point: _Point
+                point: _Point, optionsView: true, isModel: false
             });
 
             ActualMoves++;

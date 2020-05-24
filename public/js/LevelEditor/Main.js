@@ -80,22 +80,31 @@ const SetChangeTypeEvent = (...buttonTypes) => {
 const ChangeInDirection = ({ element = null } = {}) => {
     if (!element instanceof Hexagon) return;
 
-    // for (let currentObject = 0; currentObject < ActualLevel.length; currentObject++) {
-    //     if (ActualLevel[currentObject].row == element.row &&
-    //         ActualLevel[currentObject].col == element.col && currentObject > 0) {
+    if (ActualLevel.length == 0) element.inDirection = -1;
+    else {
+        let ExistsItem = false;
+        let NextInDirectionItem = null;
 
-    //         const LastItemOutDirection = ActualLevel[currentObject - 1].outDirection;
-    //         element.inDirection = LastItemOutDirection < 3 ?
-    //             LastItemOutDirection + 3 : LastItemOutDirection - 3;
+        for (let it = 0; it < ActualLevel.length; it++) {
+            if (ActualLevel[it].row == element.row && ActualLevel[it].col == element.col) {
+                ExistsItem = true;
 
-    //         if (currentObject < ActualLevel.length - 1) {
-    //             const ActualOutDirection = ActualLevel[currentObject].outDirection;
+                if (it != ActualLevel.length - 1) NextInDirectionItem = ActualLevel[it + 1];
+            }
+        }
 
-    //             ActualLevel[currentObject + 1].inDirection = ActualOutDirection < 3 ?
-    //                 ActualOutDirection + 3 : ActualOutDirection - 3;
-    //         }
-    //     }
-    // }
+        if (!ExistsItem) {
+            const LastItemOutDirection = ActualLevel[ActualLevel.length - 1].outDirection;
+            element.inDirection = LastItemOutDirection < 3 ? LastItemOutDirection + 3
+                : LastItemOutDirection - 3;
+        }
+        else {
+            if (NextInDirectionItem != null) {
+                NextInDirectionItem.inDirection = element.outDirection < 3 ?
+                    element.outDirection + 3 : element.outDirection - 3;
+            }
+        }
+    }
 }
 
 const SetLevelInfo = ({ element = null } = {}) => {

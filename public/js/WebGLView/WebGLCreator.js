@@ -35,15 +35,19 @@ class WebGLCreator {
         $("#MainWebGLRoot").append(this.mainRenderer.domElement);
     }
 
-    SetMovingObject({ object = null, destinationVector, clickedVector, point } = {}) {
+    SetMovingObject({ object = null, destinationVector = 0, clickedVector = 0, point = null,
+        optionsView = false, isModel = false } = {}) {
+
         if (object == null || !destinationVector instanceof THREE.Vector3
-            || !clickedVector instanceof THREE.Vector3 || !point instanceof Point) return;
+            || !clickedVector instanceof THREE.Vector3) return;
 
         this.moving = true;
         this.movingObject = object;
         this.destinationVector = destinationVector;
         this.clickedVector = clickedVector;
         this.destinationPoint = point;
+        this.optionsView = optionsView;
+        this.isModel = isModel;
     }
 
     GetScene() {
@@ -61,34 +65,46 @@ class WebGLCreator {
     Render() {
 
         if (this.moving) {
-            const MovingObject = this.movingObject.GetPlayerContainer();
-            const ActualDistance = MovingObject.position.clone().distanceTo(this.clickedVector);
+            const ActualDistance = this.movingObject.position.clone().distanceTo(this.clickedVector);
 
             if (ActualDistance < Settings.PlayerSize / 8) this.moving = false;
 
-            MovingObject.translateOnAxis(this.destinationVector, this.actualSpeed);
+            this.movingObject.translateOnAxis(this.destinationVector, this.actualSpeed);
 
-            this.mainCamera.position.x = MovingObject.position.x;
-            this.mainCamera.position.y = MovingObject.position.y + Settings.CameraOffset.y;
-            this.mainCamera.position.z = MovingObject.position.z + Settings.CameraOffset.z;
+            if (!this.isModel) this.UpdatePlayerCamera();
+            else this.UpdateModelCamera();
 
-            this.mainCamera.lookAt(MovingObject.position);
+            this.mainCamera.lookAt(this.movingObject.position);
 
-            this.destinationPoint.GetPoint().rotation.y += 0.05;
+            if (this.destinationPoint)
+                this.destinationPoint.GetPoint().rotation.y += 0.05;
 
-            this.SetOptionsView({ element: MovingObject, distance: ActualDistance });
+            if (this.optionsView)
+                this.SetOptionsView({ distance: ActualDistance });
         }
 
         this.mainRenderer.render(this.mainScene, this.mainCamera);
         requestAnimationFrame(this.Render.bind(this));
     }
 
-    SetOptionsView({ element = null, distance = null } = {}) {
-        if (!element instanceof Player || distance == null) return;
+    UpdatePlayerCamera() {
+        this.mainCamera.position.x = this.movingObject.position.x;
+        this.mainCamera.position.y = this.movingObject.position.y + Settings.CameraOffset.y;
+        this.mainCamera.position.z = this.movingObject.position.z + Settings.CameraOffset.z;
+    }
 
-        const PositionX = Math.round(element.position.x, 2);
-        const PositionY = Math.round(element.position.y, 2);
-        const PositionZ = Math.round(element.position.z, 2);
+    UpdateModelCamera() {
+        this.mainCamera.position.x = this.movingObject.position.x + Settings.ModelCameraOffset.xz;
+        this.mainCamera.position.y = this.movingObject.position.y + Settings.ModelCameraOffset.y;
+        this.mainCamera.position.z = this.movingObject.position.z + Settings.ModelCameraOffset.xz;
+    }
+
+    SetOptionsView({ distance = null } = {}) {
+        if (distance == null) return;
+
+        const PositionX = Math.round(this.movingObject.position.x, 2);
+        const PositionY = Math.round(this.movingObject.position.y, 2);
+        const PositionZ = Math.round(this.movingObject.position.z, 2);
 
         if (distance < Settings.PlayerSize / 8) distance = 0;
 
