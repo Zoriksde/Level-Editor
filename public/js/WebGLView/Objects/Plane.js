@@ -1,5 +1,3 @@
-const PlaneSize = 2200;
-
 class Plane {
     constructor({ planeName = "" } = {}) {
 
@@ -9,7 +7,7 @@ class Plane {
     }
 
     InitializePlane() {
-        this.planeGeometry = new THREE.PlaneGeometry(PlaneSize, PlaneSize, 1);
+        this.planeGeometry = new THREE.PlaneGeometry(Settings.PlaneSize, Settings.PlaneSize, 1);
         this.plane = new THREE.Mesh(this.planeGeometry, Settings.BasicPlaneMaterial);
         this.plane.rotation.x = -Math.PI / 2;
     }

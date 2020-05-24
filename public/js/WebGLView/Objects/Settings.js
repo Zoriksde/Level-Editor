@@ -50,6 +50,8 @@ const Settings = {
         opacity: 1
     }),
 
+    PlaneSize: 2200,
+
     BasicPlaneMaterial: new THREE.MeshBasicMaterial({
         map: new THREE.TextureLoader().load('gfx/stone.jpg'),
         side: THREE.DoubleSide,
@@ -81,5 +83,19 @@ const Settings = {
         x: 20, y: 40, z: -25
     },
 
-    ModelSizeZ: -1
+    ModelSizeZ: -1,
+
+    BasicAllyMaterial: new THREE.MeshBasicMaterial({
+        color: 0x32f081,
+        side: THREE.DoubleSide,
+        wireframe: true,
+        transparent: true,
+        opacity: 1
+    }),
+
+    AllyRadius: 50,
+
+    AllySegments: 64,
+
+    AllyName: "Ally"
 }
