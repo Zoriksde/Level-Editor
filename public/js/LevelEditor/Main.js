@@ -80,30 +80,56 @@ const SetChangeTypeEvent = (...buttonTypes) => {
 const ChangeInDirection = ({ element = null } = {}) => {
     if (!element instanceof Hexagon) return;
 
-    if (ActualLevel.length == 0) element.inDirection = -1;
-    else {
-        let ExistsItem = false;
-        let NextInDirectionItem = null;
+    let ItemExists = false;
+
+    if (ActualLevel.length > 1) {
 
         for (let it = 0; it < ActualLevel.length; it++) {
             if (ActualLevel[it].row == element.row && ActualLevel[it].col == element.col) {
-                ExistsItem = true;
 
-                if (it != ActualLevel.length - 1) NextInDirectionItem = ActualLevel[it + 1];
+                let LastItem, NextItem;
+
+                if (it == ActualLevel.length - 1) {
+                    LastItem = ActualLevel[it - 1];
+
+                    const ParsedLastOutDirection = parseInt(LastItem.outDirection);
+
+                    element.inDirection = ParsedLastOutDirection < 3 ?
+                        ParsedLastOutDirection + 3 : ParsedLastOutDirection - 3;
+                }
+                else if (it == 0) {
+                    NextItem = ActualLevel[it + 1];
+
+                    const ParsedThisOutDirection = parseInt(element.outDirection);
+
+                    NextItem.inDirection = ParsedThisOutDirection < 3 ?
+                        ParsedThisOutDirection + 3 : ParsedThisOutDirection - 3;
+                }
+                else {
+                    LastItem = ActualLevel[it - 1];
+
+                    const ParsedLastOutDirection = parseInt(LastItem.outDirection);
+
+                    element.inDirection = ParsedLastOutDirection < 3 ?
+                        ParsedLastOutDirection + 3 : ParsedLastOutDirection - 3;
+
+                    NextItem = ActualLevel[it + 1];
+
+                    const ParsedThisOutDirection = parseInt(element.outDirection);
+
+                    NextItem.inDirection = ParsedThisOutDirection < 3 ?
+                        ParsedThisOutDirection + 3 : ParsedThisOutDirection - 3;
+                }
+                ItemExists = true;
             }
         }
+    }
 
-        if (!ExistsItem) {
-            const LastItemOutDirection = ActualLevel[ActualLevel.length - 1].outDirection;
-            element.inDirection = LastItemOutDirection < 3 ? LastItemOutDirection + 3
-                : LastItemOutDirection - 3;
-        }
-        else {
-            if (NextInDirectionItem != null) {
-                NextInDirectionItem.inDirection = element.outDirection < 3 ?
-                    element.outDirection + 3 : element.outDirection - 3;
-            }
-        }
+    if (!ItemExists && ActualLevel.length > 0) {
+
+        const LastOutDirection = ActualLevel[ActualLevel.length - 1].outDirection;
+        element.inDirection = LastOutDirection < 3 ? LastOutDirection + 3 :
+            LastOutDirection - 3;
     }
 }
 

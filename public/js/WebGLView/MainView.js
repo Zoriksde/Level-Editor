@@ -10,7 +10,7 @@ let _Hexagon = new Wall({ hexagonName: "Wall" }, {
 
 $(document).ready(() => {
     const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL" });
-    const _WebGLScene = _WebGLCreator.GetScene(); 
+    const _WebGLScene = _WebGLCreator.GetScene();
     const _WebGLCamera = _WebGLCreator.GetCamera();
     const _WebGLRenderer = _WebGLCreator.GetRenderer();
 
@@ -139,5 +139,5 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
         || !camera instanceof THREE.PerspectiveCamera) return;
 
     renderer.render(scene, camera);
-    requestAnimationFrame(Render.bind(null, {renderer: renderer, scene: scene, camera: camera}));
+    requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));
 }

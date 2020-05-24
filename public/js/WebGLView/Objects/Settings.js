@@ -97,5 +97,34 @@ const Settings = {
 
     AllySegments: 64,
 
-    AllyName: "Ally"
+    AllyName: "Ally",
+
+    BasicSkyboxMaterials: [
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_front_side.jpg'),
+            side: THREE.BackSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_back_side.jpg'),
+            side: THREE.BackSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_up_side.jpg'),
+            side: THREE.BackSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_down_side.jpg'),
+            side: THREE.BackSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_right_side.jpg'),
+            side: THREE.BackSide
+        }),
+        new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_left_side.jpg'),
+            side: THREE.BackSide
+        }),
+    ],
+
+    SkyboxSize: 10000
 }
