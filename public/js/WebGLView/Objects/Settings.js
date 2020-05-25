@@ -1,7 +1,7 @@
 const Settings = {
 
     BasicMaterial: new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load('gfx/texture.png'),
+        map: new THREE.TextureLoader().load('gfx/Textures/texture.png'),
         side: THREE.DoubleSide,
         wireframe: false,
         transparent: true,
@@ -9,7 +9,7 @@ const Settings = {
     }),
 
     PhongMaterial: new THREE.MeshPhongMaterial({
-        map: new THREE.TextureLoader().load('gfx/texture.png'),
+        map: new THREE.TextureLoader().load('gfx/Textures/texture.png'),
         side: THREE.DoubleSide,
         specular: 0x111111,
         shininess: 30,
@@ -27,7 +27,7 @@ const Settings = {
     }),
 
     BasicTreasureMaterial: new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load('gfx/chest.jpg'),
+        map: new THREE.TextureLoader().load('gfx/Textures/chest.jpg'),
         side: THREE.DoubleSide,
         wireframe: false,
         transparent: true,
@@ -35,7 +35,7 @@ const Settings = {
     }),
 
     PhongTreasureMaterial: new THREE.MeshPhongMaterial({
-        map: new THREE.TextureLoader().load('gfx/chest.jpg'),
+        map: new THREE.TextureLoader().load('gfx/Textures/chest.jpg'),
         side: THREE.DoubleSide,
         specular: 0x111111,
         shininess: 25,
@@ -53,7 +53,7 @@ const Settings = {
     PlaneSize: 2200,
 
     BasicPlaneMaterial: new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load('gfx/stone.jpg'),
+        map: new THREE.TextureLoader().load('gfx/Textures/stone.jpg'),
         side: THREE.DoubleSide,
         wireframe: false,
         transparent: true,
@@ -75,7 +75,7 @@ const Settings = {
     PlayerSize: 80,
 
     BasicModelMaterial: new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("/gfx/Materials/PlayerModel.png"),
+        map: new THREE.TextureLoader().load("/gfx/Materials/spider.png"),
         morphTargets: true
     }),
 
@@ -100,7 +100,7 @@ const Settings = {
     AllyName: "Ally",
 
     BasicAllyModelMaterial: new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("/gfx/Materials/PlayerModel.png"),
+        map: new THREE.TextureLoader().load("/gfx/Materials/spider.png"),
         morphTargets: true
     }),
 

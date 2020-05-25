@@ -34,7 +34,10 @@ class AllyModel {
     }
 
     SetModelAnimation({ animationName = "" } = {}) {
-        this.mixer.clipAction(animationName).play();
+        if (this.mixer) {
+            this.mixer.uncacheRoot(this.model);
+            this.mixer.clipAction(animationName).play();
+        }
     }
 
     GetModelContainer() {

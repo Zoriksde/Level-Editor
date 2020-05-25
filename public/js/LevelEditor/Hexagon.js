@@ -36,7 +36,7 @@ class Hexagon {
         this.hexagonNested.addClass('hexagon-nested');
 
         this.backgroundBlock.addClass('hexagon-arrow');
-        this.backgroundBlock.attr('src', '/gfx/arrow.png');
+        this.backgroundBlock.attr('src', '/gfx/Application/arrow.png');
         this.backgroundBlock.css('display', 'none');
 
         this.directionBlock.addClass('hexagon-dir');

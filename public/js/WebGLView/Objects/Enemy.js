@@ -13,7 +13,7 @@ class Enemy extends Hexagon {
     InitializeAlly() {
 
         this.ally = new AllyModel({ allyModelName: "AllyModel" });
-        this.ally.InitializeModel('/data/model.json', this.radius, (model) => {
+        this.ally.InitializeModel('/data/spider.json', this.radius, (model) => {
 
             this.container.add(model);
         })

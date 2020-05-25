@@ -103,7 +103,7 @@ const InitializeLightPositionRange = () => {
 const InitializeModel = ({ scene = null, camera = null } = {}) => {
     if (!scene instanceof THREE.Scene || !camera instanceof THREE.PerspectiveCamera) return;
 
-    _Model.InitializeModel('/data/model.json', (model) => {
+    _Model.InitializeModel('/data/spider.json', (model) => {
         scene.add(model);
 
         camera.position.x = model.position.x + Settings.ModelCameraOffset.x;
@@ -154,15 +154,18 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
     if (!renderer instanceof THREE.WebGLRenderer || !scene instanceof THREE.Scene
         || !camera instanceof THREE.PerspectiveCamera) return;
 
+    const ClockDelta = _Clock.getDelta();
+    _Model.UpdateModelMixer(ClockDelta);
+
     if (MovingObject) {
 
         const ModelContainer = _Model.GetModelContainer();
         const ActualDistance = ModelContainer.position.clone().distanceTo(ClickedVector);
-        const ClockDelta = _Clock.getDelta();
 
-        _Model.UpdateModelMixer(ClockDelta);
-
-        if (ActualDistance < Settings.ModelSizeZ / 8) MovingObject = false;
+        if (ActualDistance < Settings.ModelSizeZ / 8) {
+            MovingObject = false;
+            _Model.SetModelAnimation({ animationName: "Stand" });
+        }
 
         ModelContainer.translateOnAxis(DestinationVector, 0.3);
 

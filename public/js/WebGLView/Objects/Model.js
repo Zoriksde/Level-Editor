@@ -22,6 +22,7 @@ class Model {
             Settings.ModelSizeZ = ModelBox.getSize().z;
 
             this.mixer = new THREE.AnimationMixer(this.model);
+            this.SetModelAnimation({ animationName: "Stand" });
 
             callback(this.container);
         })
@@ -32,7 +33,10 @@ class Model {
     }
 
     SetModelAnimation({ animationName = "" } = {}) {
-        this.mixer.clipAction(animationName).play();
+        if (this.mixer) {
+            this.mixer.uncacheRoot(this.model);
+            this.mixer.clipAction(animationName).play();
+        }
     }
 
     GetModelContainer() {

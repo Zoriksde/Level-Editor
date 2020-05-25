@@ -62,7 +62,7 @@ const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, c
                         title: "Error 0x783", message: `
                     Cannot Initialize Ally while Player is moving forward !\n
                     You need to wait, until player stops moving though ! \n
-                    0x783`, imageURL: '/gfx/error0x783.png'
+                    0x783`, imageURL: '/gfx/Errors/error0x783.png'
                     });
                     return;
                 }
@@ -72,7 +72,7 @@ const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, c
                         title: "Error 0x784", message: `
                     This Ally has been integrated yet correctly ! \n
                     You cannot integrate same ally more than once ! \n
-                    0x784`, imageURL: '/gfx/error0x784.png'
+                    0x784`, imageURL: '/gfx/Errors/error0x784.png'
                     });
                     return;
                 }
@@ -86,7 +86,7 @@ const CreatePlayerRaycaster = ({ scene = null, camera = null, renderer = null, c
                         title: "Error 0x782", message: `
                     Cannot Initialize Player while Ally is moving forward !\n
                     You need to wait, until ally stops moving though ! \n
-                    0x782`, imageURL: '/gfx/error0x782.png'
+                    0x782`, imageURL: '/gfx/Errors/error0x782.png'
                     });
                     return;
                 }
