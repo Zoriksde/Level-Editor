@@ -1,6 +1,7 @@
 const _Connection = new Connection({ connectionName: "ConnectionToServer" });
 const Types = ["Wall", "Enemy", "Treasure", "Light"];
 const Lights = [];
+const Allies = [];
 const _Model = new Model({ modelName: "Model" });
 const _Clock = new THREE.Clock();
 
@@ -58,6 +59,8 @@ const CreateHexagon = ({ row = 0, col = 0, currentType = "", outDoor = 0, inDoor
             radius: 50, row: row, col: col,
             inDoor: inDoor, outDoor: outDoor, containsLight: true
         });
+
+        Allies.push(_Hexagon);
     }
     else if (currentType == Types[2]) {
         _Hexagon = new Treasure({ hexagonName: "Treasure" }, {
@@ -169,6 +172,10 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
 
         camera.lookAt(ModelContainer.position);
     }
+
+    Allies.forEach((object) => {
+        object.ally.UpdateModelMixer();
+    })
 
     renderer.render(scene, camera);
     requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));

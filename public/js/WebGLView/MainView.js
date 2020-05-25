@@ -1,6 +1,7 @@
 let AxesEnabled = false;
 let HexagonEnabled = true;
 const TypesButton = [];
+let CurrentEnemy = null;
 
 const _Axes = new THREE.AxesHelper(800);
 let _Hexagon = new Wall({ hexagonName: "Wall" }, {
@@ -104,6 +105,7 @@ const SetTypeButtonEnable = ({ enable = false } = {}) => {
 const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
     if (type == null || !scene instanceof THREE.Scene) return;
 
+    CurrentEnemy = null;
     scene.remove(_Hexagon.GetHexagon());
 
     if (type == TypesButton[0].attr('type')) {
@@ -117,6 +119,8 @@ const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
             radius: 100, row: 0, col: 0,
             inDoor: 2, outDoor: 3, containsLight: false
         });
+
+        CurrentEnemy = _Hexagon;
     }
     else if (type == TypesButton[2].attr('type')) {
         _Hexagon = new Treasure({ hexagonName: "Treasure" }, {
@@ -137,6 +141,8 @@ const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
 const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
     if (!renderer instanceof THREE.WebGLRenderer || !scene instanceof THREE.Scene
         || !camera instanceof THREE.PerspectiveCamera) return;
+
+    if (CurrentEnemy) console.log(CurrentEnemy.ally.UpdateModelMixer());
 
     renderer.render(scene, camera);
     requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));

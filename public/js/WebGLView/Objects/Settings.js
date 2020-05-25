@@ -99,6 +99,11 @@ const Settings = {
 
     AllyName: "Ally",
 
+    BasicAllyModelMaterial: new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("/gfx/Materials/PlayerModel.png"),
+        morphTargets: true
+    }),
+
     BasicSkyboxMaterials: [
         new THREE.MeshBasicMaterial({
             map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_front_side.jpg'),
