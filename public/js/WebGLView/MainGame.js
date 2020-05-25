@@ -2,6 +2,8 @@ const _Connection = new Connection({ connectionName: "ConnectionToServer" });
 const Types = ["Wall", "Enemy", "Treasure", "Light"];
 const Lights = [];
 const AllAllies = [];
+const IntegratedAllies = [];
+const IntegratedObjects = [];
 
 const _Model = new Model({ modelName: "Model" });
 const _Clock = new THREE.Clock();
@@ -15,6 +17,7 @@ let MovingAlly = false;
 let ClickedVector = new THREE.Vector3(0, 0, 0);
 let DestinationVector = new THREE.Vector3(0, 0, 0);
 let AllyDestinationVector = new THREE.Vector3(0, 0, 0);
+let SourceVector = new THREE.Vector3(0, 0, 0);
 
 $(document).ready(() => {
 
@@ -67,7 +70,7 @@ const CreateHexagon = ({ row = 0, col = 0, currentType = "", outDoor = 0, inDoor
             inDoor: inDoor, outDoor: outDoor, containsLight: true
         });
 
-        AllAllies.push(_Hexagon);
+        AllAllies.push(_Hexagon.GetAllyObject());
     }
     else if (currentType == Types[2]) {
         _Hexagon = new Treasure({ hexagonName: "Treasure" }, {
@@ -139,7 +142,7 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
         if (Intersects.length > 0) {
             const FirstObject = Intersects[0].object;
 
-            if (FirstObject.name == Settings.AllyModelName)
+            if (FirstObject.name == Settings.AllyModelName && !IntegratedObjects.includes(FirstObject))
                 DisplayCurrentRing({ object: FirstObject.parent, scene: scene });
             else
                 HideCurrentRing({ scene: scene });
@@ -158,6 +161,7 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
             const FirstObject = Intersects[0].object;
 
             if (FirstObject.name == Settings.AllyModelName) {
+
                 if (MovingObject) {
 
                     SetModalMessage({
@@ -169,7 +173,19 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
                     return;
                 }
 
-                SetNewAlly({ clickedObject: FirstObject.parent });
+                if (IntegratedObjects.includes(FirstObject)) {
+
+                    SetModalMessage({
+                        title: "Error 0x784", message: `
+                    This Ally has been integrated yet correctly ! \n
+                    You cannot integrate same ally more than once ! \n
+                    0x784`, imageURL: '/gfx/Errors/error0x984.png'
+                    });
+
+                    return;
+                }
+
+                SetNewAlly({ clickedObject: FirstObject });
             }
             else {
                 if (MovingAlly) {
@@ -208,6 +224,17 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
 
         ModelContainer.translateOnAxis(DestinationVector, ActualSpeed);
 
+        if (IntegratedAllies.length > 0) {
+
+            IntegratedAllies.forEach((integratedAlly) => {
+
+                const UpdatedPlayerPosition = ModelContainer.position.clone()
+                    .sub(integratedAlly.GetModelContainer().getWorldPosition()).normalize();
+
+                integratedAlly.GetModelContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
+            })
+        }
+
         camera.position.x = ModelContainer.position.x + Settings.ModelCameraOffset.x;
         camera.position.y = ModelContainer.position.y + Settings.ModelCameraOffset.y;
         camera.position.z = ModelContainer.position.z + Settings.ModelCameraOffset.z;
@@ -218,8 +245,21 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
     if (RotatingRing) _Ring.rotation.z += 0.02;
 
     AllAllies.forEach((object) => {
-        object.GetAllyObject().UpdateModelMixer();
+        object.UpdateModelMixer();
     })
+
+    if (MovingAlly) {
+
+        const Model = IntegratedAllies[IntegratedAllies.length - 1];
+        const ActualDistance = Model.GetModelContainer().getWorldPosition().clone().distanceTo(ClickedVector);
+
+        if (ActualDistance < Settings.ModelSizeZ) {
+            MovingAlly = false;
+            Model.SetModelAnimation({ animationName: "Stand" });
+        }
+
+        Model.GetModelContainer().translateOnAxis(AllyDestinationVector, ActualSpeed);
+    }
 
     renderer.render(scene, camera);
     requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));
@@ -230,8 +270,8 @@ const DisplayCurrentRing = ({ object = null, scene = null } = {}) => {
 
     RotatingRing = true;
 
-    _Ring.position.x = object.parent.position.x;
-    _Ring.position.z = object.parent.position.z;
+    _Ring.position.x = object.getWorldPosition().x;
+    _Ring.position.z = object.getWorldPosition().z;
 
     scene.add(_Ring);
 }
@@ -246,12 +286,29 @@ const HideCurrentRing = ({ scene = null } = {}) => {
 const SetNewAlly = ({ clickedObject = null } = {}) => {
     if (!clickedObject instanceof THREE.Object3D) return;
 
-    const SourceVector = _Model.GetModelContainer().getWorldPosition();
+    SourceVector = _Model.GetModelContainer().getWorldPosition();
 
     AllyDestinationVector = SourceVector.clone()
-        .sub(clickedObject[0].getWorldPosition()).normalize();
-    
-    MovingAlly = true;
+        .sub(clickedObject.getWorldPosition()).normalize();
+
+    AllAllies.forEach((ally) => {
+        if (ally.GetModelObject() == clickedObject) {
+
+            const AllyModelRotation = Math.atan2(
+                clickedObject.getWorldPosition().clone().x - SourceVector.x,
+                clickedObject.getWorldPosition().clone().z - SourceVector.z
+            );
+
+            clickedObject.rotation.y = AllyModelRotation - Math.PI / 2;
+            ally.SetModelAnimation({ animationName: "run" });
+
+            IntegratedAllies.push(ally);
+            IntegratedObjects.push(clickedObject);
+            MovingAlly = true;
+
+            return;
+        }
+    })
 }
 
 const SetPlayerMovement = ({ intersects = null } = {}) => {
