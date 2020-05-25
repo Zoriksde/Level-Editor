@@ -82,7 +82,13 @@ const ChangeInDirection = ({ element = null } = {}) => {
 
     let ItemExists = false;
 
-    if (ActualLevel.length > 1) {
+    if (ActualLevel.length == 1) {
+        
+        element.inDirection = -1;
+        ItemExists = true;
+    }
+
+    else if (ActualLevel.length > 1) {
 
         for (let it = 0; it < ActualLevel.length; it++) {
             if (ActualLevel[it].row == element.row && ActualLevel[it].col == element.col) {
