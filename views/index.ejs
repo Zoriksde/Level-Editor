@@ -1,12 +1,63 @@
 <%- include('includes/head.ejs') %>
 
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/Index/index.css">
+
 </head>
 
 <body>
     <%- include('includes/header.ejs') %>
 
     <div class="row d-flex flex-row">
-        
-        <h1>Info</h1>
 
-    <%- include('includes/end.ejs') %>
+        <div class="col-md-2" id="EmptyField">
+
+        </div>
+
+        <div class="col-md-10 row d-flex flex-row justify-content-around" id="MainMenu">
+
+            <div class="card" style="width: 72rem; height: 38rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Opis Projektu</h5>
+                    <p class="card-text">
+                        Projekt napisany przez Patryka Przybysza z klasy 3ic, składa się on
+                        odpowiednio z ćwiczeń oraz głównej jego części czyli "gry", polega ona,
+                        na wygenerowaniu lub pobraniu z serwera zapisanego poziomu, wycztaniu go,
+                        w przypadku chęci również można go zmodyfikować, a następnie przejściu do
+                        naszej gry, polega ona na poruszaniu się naszym graczem ( modelem ), w naszym
+                        labiryncie, każde pole naszego labiryntu posiada specyficzne właściwości tj.
+                        drzwi wejściowe, drzwi wyjściowe, oraz typ naszego pola, kamera automatycznie podąża
+                        za naszym graczem, możemy również modyfikować intensywność oraz pozycję naszego światła,
+                        nasze możliwości rozszerza opcja poruszania się wybranych modeli za naszym graczem.
+
+                    </p>
+
+                    <p class="card-text">
+                        Projekt ten został napisany przy pomocy HTML5, CSS3, JS w wersji ES6+, Serwera NodeJS z
+                        wykorzystaniem
+                        framework'u Express, Bazy Danych NeDB ( NoSQL ), oraz biblioteki Three.js
+                    </p>
+
+                    <p class="card-text">
+                        Projekt ten implementuje wzorzec MVC ( Model View Controller ), który znacznie
+                        ułatwia pracę nad naszą aplikacją. Model (Model) odpowiada za logiczną strukturę naszych
+                        danych, umożliwia nam manipulowanie nimi w zależności od danych pobranych od
+                        kontrolera, Widok ( View ) odpowiada za renderowanie odpowiedniej grafiki dla
+                        konkrentego użytkownika, w zależności od danych pobranych z kontrolera. Kontroler
+                        ( Controller ) jest "łącznikiem", pomiędzy naszym Modelem a Widokiem, umożliwia
+                        skutczną komunikację między nimi.
+                    </p>
+                </div>
+                <div class="row d-flex flex-row justify-content-around">
+                    <img class="card-img-top" src="/gfx/app_01.png" style="width: 16rem; height:15rem;"
+                        alt="Application Image">
+                    <img class="card-img-top" src="/gfx/app_02.png" style="width: 16rem; height:15rem;"
+                        alt="Application Image">
+                    <img class="card-img-top" src="/gfx/app_03.png" style="width: 16rem; height:15rem;"
+                        alt="Application Image">
+                </div>
+            </div>
+
+        </div>
+
+        <%- include('includes/end.ejs') %>
