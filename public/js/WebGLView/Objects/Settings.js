@@ -97,11 +97,27 @@ const Settings = {
 
     AllySegments: 64,
 
+    AllyModelName: "AllyModel",
+
     AllyName: "Ally",
 
     BasicAllyModelMaterial: new THREE.MeshBasicMaterial({
         map: new THREE.TextureLoader().load("/gfx/Materials/spider.png"),
         morphTargets: true
+    }),
+
+    RingInnerRadius: 3,
+
+    RingOuterRadius: 6,
+
+    RingSegments: 6,
+
+    BasicRingMaterial: new THREE.MeshBasicMaterial({
+        color: 0x0ad2518,
+        side: THREE.DoubleSide,
+        wireframe: false,
+        transparent: true,
+        opacity: 1
     }),
 
     BasicSkyboxMaterials: [

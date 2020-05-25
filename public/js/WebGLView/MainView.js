@@ -1,6 +1,9 @@
 let AxesEnabled = false;
 let HexagonEnabled = true;
+
 const TypesButton = [];
+const HexagonRadius = 100;
+
 let CurrentEnemy = null;
 
 const _Axes = new THREE.AxesHelper(800);
@@ -110,13 +113,13 @@ const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
 
     if (type == TypesButton[0].attr('type')) {
         _Hexagon = new Wall({ hexagonName: "Wall" }, {
-            radius: 100, row: 0, col: 0,
+            radius: HexagonRadius, row: 0, col: 0,
             inDoor: 2, outDoor: 3, containsLight: false
         });
     }
     else if (type == TypesButton[1].attr('type')) {
         _Hexagon = new Enemy({ hexagonName: "Enemy" }, {
-            radius: 100, row: 0, col: 0,
+            radius: HexagonRadius, row: 0, col: 0,
             inDoor: 2, outDoor: 3, containsLight: false
         });
 
@@ -124,13 +127,13 @@ const ChangeCurrentModel = ({ type = null, scene = null } = {}) => {
     }
     else if (type == TypesButton[2].attr('type')) {
         _Hexagon = new Treasure({ hexagonName: "Treasure" }, {
-            radius: 100, row: 0, col: 0,
+            radius: HexagonRadius, row: 0, col: 0,
             inDoor: 2, outDoor: 3, containsLight: false
         });
     }
     else if (type == TypesButton[3].attr('type')) {
         _Hexagon = new Light({ hexagonName: "Light" }, {
-            radius: 100, row: 0, col: 0,
+            radius: HexagonRadius, row: 0, col: 0,
             inDoor: 2, outDoor: 3, containsLight: true
         });
     }
@@ -142,8 +145,9 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
     if (!renderer instanceof THREE.WebGLRenderer || !scene instanceof THREE.Scene
         || !camera instanceof THREE.PerspectiveCamera) return;
 
-    if (CurrentEnemy) console.log(CurrentEnemy.ally.UpdateModelMixer());
-
     renderer.render(scene, camera);
+
+    if (CurrentEnemy) CurrentEnemy.GetAllyObject().UpdateModelMixer();
+
     requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));
 }

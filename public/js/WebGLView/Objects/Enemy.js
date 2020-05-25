@@ -7,15 +7,18 @@ class Enemy extends Hexagon {
             outDoor: outDoor, containsLight: containsLight
         });
 
-        this.InitializeAlly();
+        this.InitializeModel();
     }
 
-    InitializeAlly() {
+    InitializeModel() {
 
-        this.ally = new AllyModel({ allyModelName: "AllyModel" });
-        this.ally.InitializeModel('/data/spider.json', this.radius, (model) => {
-
+        this.model = new AllyModel({ allyModelName: "AllyModel" });
+        this.model.InitializeModel('/data/spider.json', this.radius, (model) => {
             this.container.add(model);
-        })
+        });
+    }
+
+    GetAllyObject() {
+        return this.model;
     }
 }

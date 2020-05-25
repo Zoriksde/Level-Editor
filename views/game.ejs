@@ -1,11 +1,13 @@
 <%- include('includes/head.ejs') %>
 
+<link rel="stylesheet" href="/css/modal.css">
 <link rel="stylesheet" href="/css/WebGLView/root.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js"></script>
 
 <script src="/js/WebGLView/Objects/Settings.js"></script>
 <script src="/js/WebGLView/Objects/AllyModel.js"></script>
+<script src="/js/WebGLView/Objects/Ring.js"></script>
 <script src="/js/WebGLView/Objects/Door.js"></script>
 <script src="/js/WebGLView/Objects/Hexagon.js"></script>
 <script src="/js/WebGLView/Objects/Wall.js"></script>
@@ -39,5 +41,7 @@
         </div>
 
         <div class="col-md-10" id="MainWebGLRoot"></div>
+
+        <%- include('includes/modal.ejs') %>
 
         <%- include('includes/end.ejs') %>

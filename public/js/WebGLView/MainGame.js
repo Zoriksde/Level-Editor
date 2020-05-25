@@ -1,16 +1,23 @@
 const _Connection = new Connection({ connectionName: "ConnectionToServer" });
 const Types = ["Wall", "Enemy", "Treasure", "Light"];
 const Lights = [];
-const Allies = [];
+const AllAllies = [];
+
 const _Model = new Model({ modelName: "Model" });
 const _Clock = new THREE.Clock();
+const _Ring = new Ring({ ringName: "Ring" });
+const ActualSpeed = 0.5;
 
 let MovingObject = false;
+let RotatingRing = false;
+let MovingAlly = false;
 
 let ClickedVector = new THREE.Vector3(0, 0, 0);
 let DestinationVector = new THREE.Vector3(0, 0, 0);
+let AllyDestinationVector = new THREE.Vector3(0, 0, 0);
 
 $(document).ready(() => {
+
     const _WebGLCreator = new WebGLCreator({ creatorName: "WebGL" });
     const _WebGLScene = _WebGLCreator.GetScene();
     const _WebGLCamera = _WebGLCreator.GetCamera();
@@ -60,7 +67,7 @@ const CreateHexagon = ({ row = 0, col = 0, currentType = "", outDoor = 0, inDoor
             inDoor: inDoor, outDoor: outDoor, containsLight: true
         });
 
-        Allies.push(_Hexagon);
+        AllAllies.push(_Hexagon);
     }
     else if (currentType == Types[2]) {
         _Hexagon = new Treasure({ hexagonName: "Treasure" }, {
@@ -121,6 +128,24 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
     const ModelRaycaster = new THREE.Raycaster();
     const MousePosition = new THREE.Vector3();
 
+    $('#MainWebGLRoot').on('mousemove', (ev) => {
+
+        MousePosition.x = (ev.offsetX / renderer.domElement.width) * 2 - 1;
+        MousePosition.y = -(ev.offsetY / renderer.domElement.height) * 2 + 1;
+
+        ModelRaycaster.setFromCamera(MousePosition, camera);
+        const Intersects = ModelRaycaster.intersectObjects(scene.children, true);
+
+        if (Intersects.length > 0) {
+            const FirstObject = Intersects[0].object;
+
+            if (FirstObject.name == Settings.AllyModelName)
+                DisplayCurrentRing({ object: FirstObject.parent, scene: scene });
+            else
+                HideCurrentRing({ scene: scene });
+        }
+    })
+
     $('#MainWebGLRoot').on('mousedown', (ev) => {
 
         MousePosition.x = (ev.offsetX / renderer.domElement.width) * 2 - 1;
@@ -130,22 +155,36 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
         const Intersects = ModelRaycaster.intersectObjects(scene.children, true);
 
         if (Intersects.length > 0) {
+            const FirstObject = Intersects[0].object;
 
-            ClickedVector = Intersects[0].point;
-            ClickedVector.y = _Model.GetModelContainer().scale.y;
+            if (FirstObject.name == Settings.AllyModelName) {
+                if (MovingObject) {
 
-            DestinationVector = ClickedVector.clone()
-                .sub(_Model.GetModelContainer().position).normalize();
+                    SetModalMessage({
+                        title: "Error 0x983", message: `
+                    Cannot Initialize Ally while Player is moving forward !\n
+                    You need to wait, until player stops moving though ! \n
+                    0x983`, imageURL: '/gfx/Errors/error0x983.png'
+                    });
+                    return;
+                }
 
-            const ModelRotation = Math.atan2(
-                _Model.GetModelContainer().position.clone().x - ClickedVector.x,
-                _Model.GetModelContainer().position.clone().z - ClickedVector.z
-            );
+                SetNewAlly({ clickedObject: FirstObject.parent });
+            }
+            else {
+                if (MovingAlly) {
 
-            _Model.GetModelObject().rotation.y = ModelRotation - Math.PI / 2;
-            _Model.SetModelAnimation({ animationName: "run" });
+                    SetModalMessage({
+                        title: "Error 0x982", message: `
+                    Cannot Initialize Player while Ally is moving forward !\n
+                    You need to wait, until ally stops moving though ! \n
+                    0x982`, imageURL: '/gfx/Errors/error0x982.png'
+                    });
+                    return;
+                }
 
-            MovingObject = true;
+                SetPlayerMovement({ intersects: Intersects });
+            }
         }
     })
 }
@@ -167,7 +206,7 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
             _Model.SetModelAnimation({ animationName: "Stand" });
         }
 
-        ModelContainer.translateOnAxis(DestinationVector, 0.3);
+        ModelContainer.translateOnAxis(DestinationVector, ActualSpeed);
 
         camera.position.x = ModelContainer.position.x + Settings.ModelCameraOffset.x;
         camera.position.y = ModelContainer.position.y + Settings.ModelCameraOffset.y;
@@ -176,10 +215,70 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
         camera.lookAt(ModelContainer.position);
     }
 
-    Allies.forEach((object) => {
-        object.ally.UpdateModelMixer();
+    if (RotatingRing) _Ring.rotation.z += 0.02;
+
+    AllAllies.forEach((object) => {
+        object.GetAllyObject().UpdateModelMixer();
     })
 
     renderer.render(scene, camera);
     requestAnimationFrame(Render.bind(null, { renderer: renderer, scene: scene, camera: camera }));
+}
+
+const DisplayCurrentRing = ({ object = null, scene = null } = {}) => {
+    if (!object instanceof THREE.Object3D || !scene instanceof THREE.Scene) return;
+
+    RotatingRing = true;
+
+    _Ring.position.x = object.parent.position.x;
+    _Ring.position.z = object.parent.position.z;
+
+    scene.add(_Ring);
+}
+
+const HideCurrentRing = ({ scene = null } = {}) => {
+    if (!scene instanceof THREE.Scene) return;
+
+    RotatingRing = false;
+    scene.remove(_Ring);
+}
+
+const SetNewAlly = ({ clickedObject = null } = {}) => {
+    if (!clickedObject instanceof THREE.Object3D) return;
+
+    const SourceVector = _Model.GetModelContainer().getWorldPosition();
+
+    AllyDestinationVector = SourceVector.clone()
+        .sub(clickedObject[0].getWorldPosition()).normalize();
+    
+    MovingAlly = true;
+}
+
+const SetPlayerMovement = ({ intersects = null } = {}) => {
+    if (!intersects instanceof Array) return;
+
+    ClickedVector = intersects[0].point;
+    ClickedVector.y = _Model.GetModelContainer().scale.y;
+
+    DestinationVector = ClickedVector.clone()
+        .sub(_Model.GetModelContainer().position).normalize();
+
+    const ModelRotation = Math.atan2(
+        _Model.GetModelContainer().position.clone().x - ClickedVector.x,
+        _Model.GetModelContainer().position.clone().z - ClickedVector.z
+    );
+
+    _Model.GetModelObject().rotation.y = ModelRotation - Math.PI / 2;
+    _Model.SetModelAnimation({ animationName: "run" });
+
+    MovingObject = true;
+}
+
+const SetModalMessage = ({ title = "", message = "", imageURL = "" } = {}) => {
+
+    $('#ModalMessageTitle').html(title);
+    $('#ModalMessageDescription').html(message);
+    $('#ModalMessageImage').attr('src', imageURL);
+
+    $('#ModalMessage').modal('show');
 }

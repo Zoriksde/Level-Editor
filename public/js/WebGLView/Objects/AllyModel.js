@@ -2,6 +2,7 @@ class AllyModel {
     constructor({ allyModelName = "" } = {}) {
 
         this.allyModelName = allyModelName;
+
         this.container = new THREE.Object3D();
         this.mixer = null;
         this.clock = new THREE.Clock();
@@ -14,9 +15,9 @@ class AllyModel {
 
         Loader.load(url, (geometry) => {
             this.model = new THREE.Mesh(geometry, Settings.BasicAllyModelMaterial);
-
-            this.model.lookAt(this.container.position);
             this.model.scale.set(ModelSize, ModelSize, ModelSize);
+
+            this.model.name = Settings.AllyModelName;
 
             this.container.add(this.model);
             this.mixer = new THREE.AnimationMixer(this.model);
