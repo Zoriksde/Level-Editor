@@ -45,6 +45,19 @@ const DrawActualLevel = ({ data = null, scene = null } = {}) => {
 
     const LevelInfo = data.Level;
 
+    if (LevelInfo == undefined) {
+        SetModalMessage({
+            title: "Undefined Behaviour", message: `
+        Moving to Level Editor Page..... `, imageURL: '/gfx/Errors/error0x211.png'
+        });
+
+        setTimeout(() => {
+            window.location.href = "/LevelEditor";
+        }, 2400);
+
+        return;
+    }
+
     LevelInfo.forEach((object) => {
         CreateHexagon({
             row: object.row, col: object.col, currentType: object.currentType,
@@ -220,6 +233,7 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
         if (ActualDistance < Settings.ModelSizeZ / 8) {
             MovingObject = false;
             _Model.SetModelAnimation({ animationName: "Stand" });
+            IntegratedAllies.forEach((ally) => ally.SetModelAnimation({ animationName: "Stand" }));
         }
 
         ModelContainer.translateOnAxis(DestinationVector, ActualSpeed);
@@ -232,9 +246,22 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
             const AllyPlayerDistance = IntegratedAllies[0].GetModelContainer().
                 getWorldPosition().clone().distanceTo(ModelContainer.position);
 
-            if (AllyPlayerDistance > Settings.ModelSizeZ)
+            if (AllyPlayerDistance > Settings.ModelSizeZ) {
+
+                const ModelVector = ModelContainer.position;
+
+                const FirstAllyRotation = Math.atan2(
+
+                    IntegratedAllies[0].GetModelContainer().getWorldPosition().clone().x
+                    - ModelVector.x,
+
+                    IntegratedAllies[0].GetModelContainer().getWorldPosition().clone().z
+                    - ModelVector.z
+                );
 
                 IntegratedAllies[0].GetModelContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
+                IntegratedAllies[0].GetModelObject().rotation.y = FirstAllyRotation - Math.PI / 2;
+            }
 
             for (let it = 1; it < IntegratedAllies.length; it++) {
 
@@ -245,9 +272,22 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
                     getWorldPosition().clone().distanceTo(IntegratedAllies[it - 1].
                         GetModelContainer().getWorldPosition());
 
-                if (AllyNextDistance > Settings.ModelSizeZ)
+                if (AllyNextDistance > Settings.ModelSizeZ) {
+
+                    const ModelVector = IntegratedAllies[it - 1].GetModelContainer().getWorldPosition();
+
+                    const NextAllyRotation = Math.atan2(
+
+                        IntegratedAllies[it].GetModelContainer().getWorldPosition().clone().x
+                        - ModelVector.x,
+
+                        IntegratedAllies[it].GetModelContainer().getWorldPosition().clone().z
+                        - ModelVector.z
+                    );
 
                     IntegratedAllies[it].GetModelContainer().translateOnAxis(UpdatedNextPosition, ActualSpeed);
+                    IntegratedAllies[it].GetModelObject().rotation.y = NextAllyRotation - Math.PI / 2;
+                }
             }
         }
 
@@ -258,7 +298,7 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
         camera.lookAt(ModelContainer.position);
     }
 
-    if (RotatingRing) _Ring.rotation.z += 0.02;
+    if (RotatingRing) _Ring.rotation.z += 0.07;
 
     AllAllies.forEach((object) => {
         object.UpdateModelMixer();
@@ -343,6 +383,8 @@ const SetPlayerMovement = ({ intersects = null } = {}) => {
 
     _Model.GetModelObject().rotation.y = ModelRotation - Math.PI / 2;
     _Model.SetModelAnimation({ animationName: "run" });
+
+    IntegratedAllies.forEach((ally) => ally.SetModelAnimation({ animationName: "run" }));
 
     MovingObject = true;
 }

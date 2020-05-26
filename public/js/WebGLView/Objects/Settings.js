@@ -80,7 +80,7 @@ const Settings = {
     }),
 
     ModelCameraOffset: {
-        x: -20, y: 25, z: 20
+        x: 30, y: 35, z: -30
     },
 
     ModelSizeZ: -1,
@@ -113,7 +113,7 @@ const Settings = {
     RingSegments: 6,
 
     BasicRingMaterial: new THREE.MeshBasicMaterial({
-        color: 0x0ad2518,
+        color: 0x00fa9a,
         side: THREE.DoubleSide,
         wireframe: false,
         transparent: true,
