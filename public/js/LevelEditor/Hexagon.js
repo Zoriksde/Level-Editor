@@ -89,6 +89,9 @@ class Hexagon {
     InitClickEvent() {
 
         this.hexagonMain.on('click', (ev) => {
+
+            if (!CheckValidation({ element: this })) return;
+
             this.currentType = ActualType;
 
             if (++this.outDirection >= MaxDirection)

@@ -83,7 +83,7 @@ const ChangeInDirection = ({ element = null } = {}) => {
     let ItemExists = false;
 
     if (ActualLevel.length == 1) {
-        
+
         element.inDirection = -1;
         ItemExists = true;
     }
@@ -137,6 +137,24 @@ const ChangeInDirection = ({ element = null } = {}) => {
         element.inDirection = LastOutDirection < 3 ? LastOutDirection + 3 :
             LastOutDirection - 3;
     }
+}
+
+const CheckValidation = ({ element = null } = {}) => {
+    if (!element instanceof Hexagon) return;
+
+    if (ActualLevel.length == 0 && (!(element.row == 0 && element.col == 0))) {
+
+        SetModalMessage({
+            title: "Error 0x111", message: `
+        You cannot start building level from any other place then map start! 
+        You need to fix it ! \n
+        0x782`, imageURL: '/gfx/Errors/error0x111.png'
+        });
+
+        return false;
+    }
+
+    return true;
 }
 
 const SetLevelInfo = ({ element = null } = {}) => {
@@ -280,4 +298,13 @@ const SetPlayGameButtonEvent = () => {
     $('#GameButton').on('click', (ev) => {
         _Connection.SetCurrentLevel({ data: LevelInfo });
     })
+}
+
+const SetModalMessage = ({ title = "", message = "", imageURL = "" } = {}) => {
+
+    $('#ModalMessageTitle').html(title);
+    $('#ModalMessageDescription').html(message);
+    $('#ModalMessageImage').attr('src', imageURL);
+
+    $('#ModalMessage').modal('show');
 }
