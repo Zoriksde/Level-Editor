@@ -20,6 +20,7 @@ class Treasure extends Hexagon {
 
         this.treasure.lookAt(this.container.position);
         this.treasure.position.y = 0 - this.treasureSize / 2;
+        this.treasure.name = Settings.CollisionName;
 
         this.container.add(this.treasure);
     }

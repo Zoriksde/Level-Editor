@@ -18,6 +18,7 @@ let ClickedVector = new THREE.Vector3(0, 0, 0);
 let DestinationVector = new THREE.Vector3(0, 0, 0);
 let AllyDestinationVector = new THREE.Vector3(0, 0, 0);
 let SourceVector = new THREE.Vector3(0, 0, 0);
+let IntegratedAlliesCounter = 0;
 
 $(document).ready(() => {
 
@@ -46,14 +47,16 @@ const DrawActualLevel = ({ data = null, scene = null } = {}) => {
     const LevelInfo = data.Level;
 
     if (LevelInfo == undefined) {
+
         SetModalMessage({
             title: "Undefined Behaviour", message: `
+        You have an empty level saved on server, you need to fix it.
         Moving to Level Editor Page..... `, imageURL: '/gfx/Errors/error0x211.png'
         });
 
         setTimeout(() => {
             window.location.href = "/LevelEditor";
-        }, 2400);
+        }, 2000);
 
         return;
     }
@@ -101,6 +104,8 @@ const CreateHexagon = ({ row = 0, col = 0, currentType = "", outDoor = 0, inDoor
     }
 
     scene.add(_Hexagon.GetHexagon());
+
+    _Model.GetModelContainer().position = new THREE.Vector3(100, 100, 100)
 }
 
 const InitializeLightIntensityRange = () => {
@@ -199,7 +204,13 @@ const CreateModelRaycaster = ({ scene = null, camera = null, renderer = null, cr
                 }
 
                 SetNewAlly({ clickedObject: FirstObject });
+                HideCurrentRing({ scene: scene });
             }
+
+            else if (FirstObject.name == Settings.CollisionName) {
+                return;
+            }
+
             else {
                 if (MovingAlly) {
 
@@ -349,6 +360,9 @@ const SetNewAlly = ({ clickedObject = null } = {}) => {
 
     AllAllies.forEach((ally) => {
         if (ally.GetModelObject() == clickedObject) {
+
+            IntegratedAlliesCounter++;
+            $('#AlliesIntegrated').val(`Allies: ${IntegratedAlliesCounter}`);
 
             const AllyModelRotation = Math.atan2(
                 clickedObject.getWorldPosition().clone().x - SourceVector.x,

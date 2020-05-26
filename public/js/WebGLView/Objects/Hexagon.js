@@ -47,6 +47,7 @@ class Hexagon {
             ActualSide.position.x = (this.radius / 2 * Math.sqrt(3)) / 2 * Math.cos(Math.PI / 3 * currentSide);
             ActualSide.position.z = (this.radius / 2 * Math.sqrt(3)) / 2 * Math.sin(Math.PI / 3 * currentSide);
             ActualSide.lookAt(this.container.position);
+            ActualSide.name = Settings.CollisionName;
 
             this.container.add(ActualSide);
         }

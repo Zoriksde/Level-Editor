@@ -120,6 +120,8 @@ const Settings = {
         opacity: 1
     }),
 
+    CollisionName: "Collision",
+
     BasicSkyboxMaterials: [
         new THREE.MeshBasicMaterial({
             map: new THREE.TextureLoader().load('/gfx/Skybox/skybox_front_side.jpg'),
