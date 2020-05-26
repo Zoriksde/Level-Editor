@@ -137,7 +137,21 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
             const UpdatedPlayerPosition = PlayerContainer.position.clone()
                 .sub(_Ally.GetAllyContainer().position).normalize();
 
-            _Ally.GetAllyContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
+            const AllyDistance = _Ally.GetAllyContainer().position.clone().
+                distanceTo(PlayerContainer.position);
+
+            if (AllyDistance > Settings.PlayerSize * 1.5) {
+
+                const PlayerVector = PlayerContainer.position;
+
+                const AllyAxesRotation = Math.atan2(
+                    _Ally.GetAllyContainer().position.clone().x - PlayerVector.x,
+                    _Ally.GetAllyContainer().position.clone().z - PlayerVector.z
+                );
+
+                _Ally.GetAllyContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
+                _Ally.GetAxesObject().rotation.y = AllyAxesRotation + Math.PI;
+            }
         }
 
         camera.position.x = PlayerContainer.position.x;
