@@ -226,13 +226,29 @@ const Render = ({ renderer = null, scene = null, camera = null } = {}) => {
 
         if (IntegratedAllies.length > 0) {
 
-            IntegratedAllies.forEach((integratedAlly) => {
+            const UpdatedPlayerPosition = ModelContainer.position.clone()
+                .sub(IntegratedAllies[0].GetModelContainer().getWorldPosition()).normalize();
 
-                const UpdatedPlayerPosition = ModelContainer.position.clone()
-                    .sub(integratedAlly.GetModelContainer().getWorldPosition()).normalize();
+            const AllyPlayerDistance = IntegratedAllies[0].GetModelContainer().
+                getWorldPosition().clone().distanceTo(ModelContainer.position);
 
-                integratedAlly.GetModelContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
-            })
+            if (AllyPlayerDistance > Settings.ModelSizeZ)
+
+                IntegratedAllies[0].GetModelContainer().translateOnAxis(UpdatedPlayerPosition, ActualSpeed);
+
+            for (let it = 1; it < IntegratedAllies.length; it++) {
+
+                const UpdatedNextPosition = IntegratedAllies[it - 1].GetModelContainer().getWorldPosition().clone()
+                    .sub(IntegratedAllies[it].GetModelContainer().getWorldPosition()).normalize();
+
+                const AllyNextDistance = IntegratedAllies[it].GetModelContainer().
+                    getWorldPosition().clone().distanceTo(IntegratedAllies[it - 1].
+                        GetModelContainer().getWorldPosition());
+
+                if (AllyNextDistance > Settings.ModelSizeZ)
+
+                    IntegratedAllies[it].GetModelContainer().translateOnAxis(UpdatedNextPosition, ActualSpeed);
+            }
         }
 
         camera.position.x = ModelContainer.position.x + Settings.ModelCameraOffset.x;
